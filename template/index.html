@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th >ID</th>
+                    <th >Name</th>
+                    <th >MSISDN</th>
+                    <th >Email</th>
+                    <th >birth_date</th>
+                    <th >created_time</th>
+                    <th >update_time</th>
+                    <th >age</th>
+                </tr>
+            </thead>
+            <tbody id="usersBody">
+                {{ range $user := .Users}}
+                <tr>
+                    <td>{{$user.ID}}</td>
+                    <td>{{$user.Name}}</td>
+                    <td>{{$user.MSISDN}}</td>
+                    <td>{{$user.Email}}</td>
+                    <td>{{$user.BirthDate}}</td>
+                    <td>{{$user.CreatedTime}}</td>
+                    <td>{{$user.UpdateTime}}</td>
+                    <td>{{$user.Age}}</td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+
+        <div>
+            Filter by Name: <br />
+            <input type="text" id="txKey" name="txKey" /> <br />
+            Visitor count: {{ .Visitor }}
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $("#txKey").keyup(function () {
+                    key = $('#txKey').val();
+                    $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8080/search?key=" + key,
+                        success: function (data) {
+                            var usersBody = "";
+                            for(var d in data){
+                                usersBody += '<tr>';
+                                usersBody += '<td>'+data[d].user_id+'</td>';
+                                usersBody += '<td>'+data[d].full_name+'</td>';
+                                usersBody += '<td>'+data[d].msisdn+'</td>';
+                                usersBody += '<td>'+data[d].user_email+'</td>';
+                                usersBody += '<td>'+data[d].birth_date+'</td>';
+                                usersBody += '<td>'+data[d].create_time+'</td>';
+                                usersBody += '<td>'+data[d].update_time+'</td>';
+                                usersBody += '<td>'+data[d].age+'</td>';
+                                usersBody += '</tr>';
+                            }
+
+                            $("#usersBody").html(usersBody);
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
