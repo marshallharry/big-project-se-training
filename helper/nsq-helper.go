@@ -12,6 +12,7 @@ func init() {
 	config = nsq.NewConfig()
 }
 
+// Publish handler
 func Publish(topic string, message []byte) {
 	p, _ := nsq.NewProducer("devel-go.tkpd:4150", config)
 
@@ -23,6 +24,7 @@ func Publish(topic string, message []byte) {
 	p.Stop()
 }
 
+// Subscribe handler
 func Subscribe(topic string, channel string, handler nsq.HandlerFunc) {
 	q, _ := nsq.NewConsumer(topic, channel, config)
 	q.AddHandler(handler)

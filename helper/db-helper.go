@@ -3,8 +3,6 @@ package helper
 import (
 	"database/sql"
 	"log"
-
-	_ "github.com/lib/pq"
 )
 
 var (
@@ -13,6 +11,7 @@ var (
 	publish = Publish
 )
 
+// User model
 type User struct {
 	ID          int    `json:"user_id"`
 	Name        string `json:"full_name"`
@@ -31,6 +30,7 @@ func init() {
 	}
 }
 
+// GetUsers by name
 func GetUsers(key string) []User {
 	where := ""
 
@@ -74,6 +74,7 @@ func GetUsers(key string) []User {
 
 }
 
+// CloseConnection handler
 func CloseConnection() {
 	dbHome.Close()
 }

@@ -13,12 +13,12 @@ var (
 )
 
 func init() {
-	redisPool = NewRedis("127.0.0.1:6379")
-	subscribe("mh0318-nsq-visitor-incr", "ch1", HandlerIncrementVisitor())
-	subscribe("mh0318-nsq-visitor-set", "ch1", HandlerSetVisitor())
+	redisPool = newRedis("127.0.0.1:6379")
+	subscribe("mh0318-nsq-visitor-incr", "ch1", handlerIncrementVisitor())
+	subscribe("mh0318-nsq-visitor-set", "ch1", handlerSetVisitor())
 }
 
-func NewRedis(address string) *redigo.Pool {
+func newRedis(address string) *redigo.Pool {
 	return &redigo.Pool{
 		MaxIdle:     1,
 		IdleTimeout: 10 * time.Second,
@@ -26,7 +26,7 @@ func NewRedis(address string) *redigo.Pool {
 	}
 }
 
-func SetRedis(key string, value interface{}) error {
+func setRedis(key string, value interface{}) error {
 	con := redisPool.Get()
 	defer con.Close()
 
@@ -34,6 +34,7 @@ func SetRedis(key string, value interface{}) error {
 	return err
 }
 
+// GetRedis handler
 func GetRedis(key string) (string, error) {
 	con := redisPool.Get()
 	defer con.Close()
@@ -41,7 +42,7 @@ func GetRedis(key string) (string, error) {
 	return redigo.String(con.Do("GET", key))
 }
 
-func Increment(key string) error {
+func increment(key string) error {
 	con := redisPool.Get()
 	defer con.Close()
 
@@ -49,16 +50,16 @@ func Increment(key string) error {
 	return err
 }
 
-func HandlerIncrementVisitor() nsq.HandlerFunc {
+func handlerIncrementVisitor() nsq.HandlerFunc {
 	return nsq.HandlerFunc(func(message *nsq.Message) error {
-		Increment("mh0318-redis-visitor")
+		increment("mh0318-redis-visitor")
 		return nil
 	})
 }
 
-func HandlerSetVisitor() nsq.HandlerFunc {
+func handlerSetVisitor() nsq.HandlerFunc {
 	return nsq.HandlerFunc(func(message *nsq.Message) error {
-		SetRedis("mh0318-redis-visitor", 1)
+		setRedis("mh0318-redis-visitor", 1)
 		return nil
 	})
 }

@@ -8,21 +8,20 @@ import (
 	"net/http"
 	"strconv"
 
+	_ "github.com/lib/pq"
 	"github.com/tokopedia/big-project/helper"
 )
 
 var (
-	getRedis  = helper.GetRedis
-	setRedis  = helper.SetRedis
-	getUsers  = helper.GetUsers
-	closeDB   = helper.CloseConnection
-	publish   = helper.Publish
-	subscribe = helper.Subscribe
+	getRedis = helper.GetRedis
+	getUsers = helper.GetUsers
+	closeDB  = helper.CloseConnection
+	publish  = helper.Publish
 )
 
 func main() {
 
-	http.HandleFunc("/html", handleHTML)
+	http.HandleFunc("/index", handleHTML)
 	http.HandleFunc("/search", handleSearch)
 	http.ListenAndServe(":8080", nil)
 	closeDB()
